@@ -9,14 +9,14 @@ import java.util.List;
 @Service
 public class QuestionDaoImpl implements QuestionDao {
 
-    private final List<Question> questions;
+    private final CSVService csvService;
 
     public QuestionDaoImpl(CSVService csvService) {
-        this.questions = csvService.getAllFromCsv();
+        this.csvService = csvService;
     }
 
     @Override
     public List<Question> findAll() {
-        return this.questions;
+        return this.csvService.getAllFromCsv();
     }
 }
