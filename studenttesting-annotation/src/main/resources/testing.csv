@@ -1,0 +1,5 @@
+﻿How many hours in a day?;5;25;24*;32;48
+How many days are in a non-leap year?;100;202;150;365*;25
+How many days in one week?;7*;14;100;20;36
+How is current measured?;Ampere*;Volt;Ohm;;
+How is voltage measured?;Ampere;Volt*;Ohm;;
