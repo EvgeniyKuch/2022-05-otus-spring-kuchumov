@@ -90,9 +90,12 @@ public class TestingServiceImpl implements TestingService {
 
     private String getResultString(AtomicInteger numberCorrectAnswers, User user) {
         return new StringBuilder()
-                .append("Number correct answers: ").append(numberCorrectAnswers).append(System.lineSeparator())
+                .append(messageService.getMessage("number.correct.answers"))
+                .append(numberCorrectAnswers).append(System.lineSeparator())
                 .append(user.getFirstName()).append(" ").append(user.getLastName())
-                .append(user.getGrade() ? ", your grade: pass" : ", your grade: fail").toString();
+                .append(user.getGrade()
+                        ? messageService.getMessage("pass")
+                        : messageService.getMessage("fail")).toString();
     }
 
     private User createUser() {
