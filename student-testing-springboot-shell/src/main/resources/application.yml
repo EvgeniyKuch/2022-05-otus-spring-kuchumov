@@ -1,0 +1,5 @@
+spring:
+  main:
+    allow-circular-references: true
+
+threshold: 3
