@@ -1,0 +1,10 @@
+spring:
+  main:
+    allow-circular-references: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/library
+    username: root
+    password: 12345
+  liquibase:
+    change-log: classpath:/db/changelog-master.xml
