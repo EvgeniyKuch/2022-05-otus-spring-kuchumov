@@ -37,8 +37,4 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
-    public Book setId(Long id) {
-        this.id = id;
-        return this;
-    }
 }

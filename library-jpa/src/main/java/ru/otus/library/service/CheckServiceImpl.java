@@ -2,10 +2,12 @@ package ru.otus.library.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.dao.AuthorDAO;
 import ru.otus.library.dao.BookDAO;
 import ru.otus.library.dao.CommentDAO;
 import ru.otus.library.dao.GenreDAO;
+import ru.otus.library.util.EntityContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,36 +28,58 @@ public class CheckServiceImpl implements CheckService {
     private final CommentDAO commentDAO;
 
     @Override
-    public String checkBook(String bookId, String year, String authorId, String genreId) {
-        return checkCorrectInput(bookId, year, authorId, genreId, null);
-    }
-
-    @Override
-    public String checkComment(String commentId, String bookId) {
-        return checkCorrectInput(bookId, null, null, null, commentId);
-    }
-
-    private String checkCorrectInput(String bookId, String year, String authorId, String genreId, String commentId) {
+    @Transactional(readOnly = true)
+    public EntityContainer checkAndGetEntities(String bookId, String year, String authorId, String genreId, String commentId) {
         List<String> incorrectly = new ArrayList<>();
+        EntityContainer entityContainer = new EntityContainer();
         try {
-            if (bookId != null && !bookDAO.existsById(Long.parseLong(bookId))) {
-                incorrectly.add(String.format("Введён несуществующий id книги: %d", Long.parseLong(bookId)));
+            if (year != null) {
+                var yearInt = Integer.parseInt(year);
+                if (!(yearInt > 0 && yearInt < 3000)) {
+                    incorrectly.add(String.format("Введён некорректный год выхода: %s", year));
+                } else {
+                    entityContainer.setYear(yearInt);
+                }
             }
-            if (year != null && !(Integer.parseInt(year) > 0 && Integer.parseInt(year) < 3000)) {
-                incorrectly.add(String.format("Введён некорректный год выхода: %s", year));
+            if (bookId != null) {
+                Long bookIdLong = Long.parseLong(bookId);
+                bookDAO.findById(bookIdLong).ifPresentOrElse(entityContainer::setBook,
+                        () -> incorrectly.add(String.format("Введён несуществующий id книги: %d", bookIdLong)));
             }
-            if (authorId != null && !authorDAO.existsById(Long.parseLong(authorId))) {
-                incorrectly.add(String.format("Введён несуществующий id автора: %d", Long.parseLong(authorId)));
+            if (authorId != null) {
+                Long authorIdLong = Long.parseLong(authorId);
+                authorDAO.findById(authorIdLong).ifPresentOrElse(entityContainer::setAuthor,
+                        () -> incorrectly.add(String.format("Введён несуществующий id автора: %d", authorIdLong)));
             }
-            if (genreId != null && !genreDAO.existsById(Long.parseLong(genreId))) {
-                incorrectly.add(String.format("Введён несуществующий id жанра: %d", Long.parseLong(genreId)));
+            if (genreId != null) {
+                Long genreIdLong = Long.parseLong(genreId);
+                genreDAO.findById(genreIdLong).ifPresentOrElse(entityContainer::setGenre,
+                        () -> incorrectly.add(String.format("Введён несуществующий id жанра: %d", genreIdLong)));
             }
-            if (commentId != null && !commentDAO.existsById(Long.parseLong(commentId))) {
-                incorrectly.add(String.format("Введён несуществующий id комментария: %d", Long.parseLong(commentId)));
+            if (commentId != null) {
+                Long commentIdLong = Long.parseLong(commentId);
+                commentDAO.findById(commentIdLong).ifPresentOrElse(entityContainer::setComment,
+                        () -> incorrectly.add(String.format("Введён несуществующий id комментария: %d", commentIdLong)));
             }
         } catch (NumberFormatException e) {
             incorrectly.add(String.format("Некорректный ввод числа. %s", e.getMessage()));
         }
-        return String.join(System.lineSeparator(), incorrectly);
+        if (!incorrectly.isEmpty()) {
+            entityContainer.setError(String.join(System.lineSeparator(), incorrectly));
+        }
+        return entityContainer;
+    }
+
+    @Override
+    public EntityContainer checkDigit(String id) {
+        EntityContainer entityContainer = new EntityContainer();
+        long longId;
+        try {
+            longId = Long.parseLong(id);
+            entityContainer.setId(longId);
+        } catch (NumberFormatException e) {
+            entityContainer.setError(String.format("Некорректный ввод числа. %s", e.getMessage()));
+        }
+        return entityContainer;
     }
 }

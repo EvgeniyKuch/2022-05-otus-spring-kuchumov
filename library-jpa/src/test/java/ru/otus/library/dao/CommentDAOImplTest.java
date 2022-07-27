@@ -42,18 +42,6 @@ class CommentDAOImplTest {
     }
 
     @Test
-    void shouldReturnAllByBookId() {
-        assertThat(commentDAO.findAllByBookId(1L)).usingRecursiveComparison()
-                .isEqualTo(em.find(Book.class, 1L).getComments());
-    }
-
-    @Test
-    void updateContentById() {
-        commentDAO.updateContentById(1L, "Не понравилось");
-        assertThat(getComment(1L).getContent()).isEqualTo("Не понравилось");
-    }
-
-    @Test
     void shouldInsertNewCommentAndReturnItWithId() {
         commentDAO.save(newComment());
         assertThat(getComment(3L))
@@ -63,7 +51,8 @@ class CommentDAOImplTest {
 
     @Test
     void shouldUpdateExistedCommentAndReturnIt() {
-        Comment comment = getComment(2L).setContent("Захватывает дух");
+        Comment comment = getComment(2L);
+        comment.setContent("Захватывает дух");
         commentDAO.save(comment);
         assertThat(getComment(2L)).usingRecursiveComparison()
                 .isEqualTo(comment);
@@ -90,8 +79,9 @@ class CommentDAOImplTest {
     }
 
     private Comment newComment() {
-        return new Comment()
-                .setBook(em.find(Book.class, 1L))
-                .setContent("Книга вкусно пахнет");
+        var comment = new Comment();
+        comment.setBook(em.find(Book.class, 1L));
+        comment.setContent("Книга вкусно пахнет");
+        return comment;
     }
 }

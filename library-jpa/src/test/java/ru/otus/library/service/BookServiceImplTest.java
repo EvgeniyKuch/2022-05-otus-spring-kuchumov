@@ -10,6 +10,7 @@ import ru.otus.library.dao.GenreDAO;
 import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Genre;
+import ru.otus.library.util.EntityContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,8 @@ class BookServiceImplTest {
     @Test
     void shouldInsertBookAndReturnItsString() {
         given(bookDAO.save(any())).willReturn(expectedBook());
-        given(checkService.checkBook(nullable(String.class), anyString(), anyString(), anyString())).willReturn("");
+        given(checkService.checkAndGetEntities(nullable(String.class), anyString(), anyString(), anyString(), nullable(String.class)))
+                .willReturn(new EntityContainer());
         assertThat(bookService.insertBook("Евгений Онегин", "1833", "1", "1")).isEqualTo(
                 "Добавлена книга" + System.lineSeparator() +
                         "Id: 1\tНазвание: Евгений Онегин\tГод: 1833\tАвтор: Александр Пушкин\tЖанр: Поэма");
@@ -49,7 +51,10 @@ class BookServiceImplTest {
 
     @Test
     void shouldUpdateBookAndReturnItsString() {
-        given(checkService.checkBook(anyString(), anyString(), anyString(), anyString())).willReturn("");
+        var container = new EntityContainer();
+        container.setBook(new Book());
+        given(checkService.checkAndGetEntities(anyString(), anyString(), anyString(), anyString(), nullable(String.class)))
+                .willReturn(container);
         given(bookDAO.save(any())).willReturn(expectedBook());
         assertThat(bookService.updateBook("1", "Евгений Онегин", "1833", "1", "1")).isEqualTo(
                 "Обновлена книга" + System.lineSeparator() +
@@ -65,28 +70,13 @@ class BookServiceImplTest {
 
     @Test
     void shouldReturnStringBookById() {
-        given(checkService.checkBook(anyString(), nullable(String.class), nullable(String.class), nullable(String.class)))
-                .willReturn("");
+        var container = new EntityContainer();
+        container.setId(1L);
+        given(checkService.checkDigit(anyString())).willReturn(container);
         given(bookDAO.findById(anyLong())).willReturn(Optional.of(expectedBook()));
         assertThat(bookService.getBookById("1")).isEqualTo(
                 "Id: 1\tНазвание: Евгений Онегин\tГод: 1833\tАвтор: Александр Пушкин\tЖанр: Поэма" + System.lineSeparator() +
                         "Комментарии к книге отсутствуют");
-    }
-
-    @Test
-    void shouldDeleteByIdAndReturnSuccessString() {
-        given(checkService.checkBook(anyString(), nullable(String.class), nullable(String.class), nullable(String.class)))
-                .willReturn("");
-        given(bookDAO.existsById(anyLong())).willReturn(false);
-        assertThat(bookService.deleteById("1")).isEqualTo("Книга id=1 с комментариями удалена");
-    }
-
-    @Test
-    void shouldNotDeleteByIdWhenErrorAndReturnErrorString() {
-        given(checkService.checkBook(anyString(), nullable(String.class), nullable(String.class), nullable(String.class)))
-                .willReturn("");
-        given(bookDAO.existsById(anyLong())).willReturn(true);
-        assertThat(bookService.deleteById("1")).isEqualTo("При удалении книги id=1 произошла ошибка");
     }
 
     private Book expectedBook() {

@@ -1,6 +1,6 @@
 package ru.otus.library.dao;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.otus.library.domain.Comment;
 
 import javax.persistence.EntityManager;
@@ -8,7 +8,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Service
 public class CommentDAOImpl implements CommentDAO {
 
     @PersistenceContext
@@ -29,24 +29,6 @@ public class CommentDAOImpl implements CommentDAO {
     @Override
     public Optional<Comment> findById(Long id) {
         return Optional.ofNullable(em.find(Comment.class, id));
-    }
-
-    @Override
-    public List<Comment> findAllByBookId(Long bookId) {
-        return em.createQuery("select c from Comment c " +
-                "left join fetch c.book b " +
-                "left join fetch b.genre g " +
-                "left join fetch b.author a " +
-                "where c.book.id = :id", Comment.class)
-                .setParameter("id", bookId).getResultList();
-    }
-
-    @Override
-    public int updateContentById(Long id, String content) {
-        return em.createQuery("update Comment c set c.content = :newContent where c.id = :id")
-                .setParameter("newContent", content)
-                .setParameter("id", id)
-                .executeUpdate();
     }
 
     @Override

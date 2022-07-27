@@ -24,13 +24,4 @@ public class Comment {
     @Column(name = "content")
     private String content;
 
-    public Comment setBook(Book book) {
-        this.book = book;
-        return this;
-    }
-
-    public Comment setContent(String content) {
-        this.content = content;
-        return this;
-    }
 }

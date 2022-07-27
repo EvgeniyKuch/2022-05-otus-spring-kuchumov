@@ -20,8 +20,4 @@ public class Genre {
     @Column(name = "name")
     private String name;
 
-    public Genre setId(Long id) {
-        this.id = id;
-        return this;
-    }
 }

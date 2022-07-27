@@ -3,9 +3,7 @@ package ru.otus.library.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.library.dao.BookDAO;
 import ru.otus.library.dao.CommentDAO;
-import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Comment;
 
 import java.util.stream.Collectors;
@@ -16,74 +14,72 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentDAO commentDAO;
 
-    private final BookDAO bookDAO;
-
     private final CheckService checkService;
 
     @Override
     @Transactional(readOnly = true)
     public String getAllComments() {
-        return commentDAO.findAll().stream().map(this::toString).collect(Collectors.joining(System.lineSeparator()));
+        String comments = commentDAO.findAll().stream().map(this::toString).collect(Collectors.joining(System.lineSeparator()));
+        return comments.isEmpty() ? "Комментарии отсутствуют" : comments;
     }
 
     @Override
     @Transactional(readOnly = true)
     public String getCommentById(String id) {
-        String incorrectInput = checkService.checkComment(id, null);
-        if (!incorrectInput.isEmpty()) {
-            return incorrectInput;
+        var container = checkService.checkDigit(id);
+        if (container.getError() != null) {
+            return container.getError();
         }
-        return commentDAO.findById(Long.parseLong(id)).map(this::toString)
+        return commentDAO.findById(container.getId()).map(this::toString)
                 .orElse(String.format("Комментарий с id = %s не найден", id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public String getAllCommentsByBookId(String bookId) {
-        String incorrectInput = checkService.checkComment(null, bookId);
-        if (!incorrectInput.isEmpty()) {
-            return incorrectInput;
+        var container = checkService.checkAndGetEntities(bookId, null, null, null, null);
+        if (container.getError() != null) {
+            return container.getError();
         }
-        String comments = commentDAO.findAllByBookId(Long.parseLong(bookId)).stream().map(this::toString)
+        String comments = container.getBook().getComments().stream().map(this::toString)
                 .collect(Collectors.joining(System.lineSeparator()));
-        return !comments.isEmpty() ? comments : String.format("Комментарии к книге c id = %s не найдены", bookId);
+        return comments.isEmpty() ? String.format("Комментарии к книге c id = %s не найдены", bookId) : comments;
     }
 
     @Override
     @Transactional
     public String addNewComment(String bookId, String content) {
-        String incorrectInput = checkService.checkComment(null, bookId);
-        if (!incorrectInput.isEmpty()) {
-            return incorrectInput;
+        var container = checkService.checkAndGetEntities(bookId, null, null, null, null);
+        if (container.getError() != null) {
+            return container.getError();
         }
-        Book book = bookDAO.findById(Long.parseLong(bookId)).orElse(new Book().setId(Long.parseLong(bookId)));
-        Comment newComment = new Comment().setContent(content).setBook(book);
-        return String.format("Добавлен комментарий:%s%s", System.lineSeparator(), toString(commentDAO.save(newComment)));
+        Comment comment = new Comment();
+        comment.setBook(container.getBook());
+        comment.setContent(content);
+        return toString(commentDAO.save(comment));
     }
 
     @Override
     @Transactional
     public String updateContentComment(String commentId, String newContent) {
-        String incorrectInput = checkService.checkComment(commentId, null);
-        if (!incorrectInput.isEmpty()) {
-            return incorrectInput;
+        var container = checkService.checkAndGetEntities(null, null, null, null, commentId);
+        if (container.getError() != null) {
+            return container.getError();
         }
-        commentDAO.updateContentById(Long.parseLong(commentId), newContent);
-        return commentDAO.findById(Long.parseLong(commentId)).map(this::toString)
-                .orElse(String.format("Произошла ошибка при изменении комментария с id = %s", commentId));
+        Comment comment = container.getComment();
+        comment.setContent(newContent);
+        return toString(commentDAO.save(comment));
     }
 
     @Override
     @Transactional
     public String deleteCommentById(String id) {
-        String incorrectInput = checkService.checkComment(id, null);
-        if (!incorrectInput.isEmpty()) {
-            return incorrectInput;
+        var container = checkService.checkDigit(id);
+        if (container.getError() != null) {
+            return container.getError();
         }
-        commentDAO.deleteById(Long.parseLong(id));
-        return !commentDAO.existsById(Long.parseLong(id))
-                ? String.format("Комментарий с id = %s удалён", id)
-                : String.format("При удалении комментария с id = %s произошла ошибка", id);
+        commentDAO.deleteById(container.getId());
+        return String.format("Комментарий с id = %s удалён", id);
     }
 
     private String toString(Comment comment) {

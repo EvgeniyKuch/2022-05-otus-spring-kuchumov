@@ -1,7 +1,9 @@
 package ru.otus.library.service;
 
-public interface CheckService {
-    String checkBook(String id, String year, String authorId, String genreId);
+import ru.otus.library.util.EntityContainer;
 
-    String checkComment(String commentId, String bookId);
+public interface CheckService {
+    EntityContainer checkAndGetEntities(String bookId, String year, String authorId, String genreId, String commentId);
+
+    EntityContainer checkDigit(String id);
 }

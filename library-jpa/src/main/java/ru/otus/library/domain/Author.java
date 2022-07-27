@@ -23,8 +23,4 @@ public class Author {
     @Column(name = "last_name")
     private String lastName;
 
-    public Author setId(Long id) {
-        this.id = id;
-        return this;
-    }
 }

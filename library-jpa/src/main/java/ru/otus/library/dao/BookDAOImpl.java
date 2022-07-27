@@ -1,6 +1,6 @@
 package ru.otus.library.dao;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.otus.library.domain.Book;
 
 import javax.persistence.EntityManager;
@@ -8,7 +8,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Service
 public class BookDAOImpl implements BookDAO {
 
     @PersistenceContext
