@@ -1,0 +1,15 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="db/changelog/2022-06-26--0001-added_entity_Author.xml"/>
+    <include file="db/changelog/2022-06-26--0002-added_entity_Genre.xml"/>
+    <include file="db/changelog/2022-06-26--0003-added_entity_Book.xml"/>
+    <include file="db/changelog/2022-06-26--0004-load_data_to_Author.xml"/>
+    <include file="db/changelog/2022-06-26--0005-load_data_to_Genre.xml"/>
+    <include file="db/changelog/2022-06-26--0006-load_data_to_Book.xml"/>
+    <include file="db/changelog/2022-07-04--0007-added_entity_Comment.xml"/>
+    <include file="db/changelog/2022-07-04--0008-load_data_to_Comment.xml"/>
+
+</databaseChangeLog>
