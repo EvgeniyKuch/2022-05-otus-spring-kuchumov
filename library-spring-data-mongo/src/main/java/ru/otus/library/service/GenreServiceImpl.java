@@ -1,7 +1,6 @@
 package ru.otus.library.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.repository.GenreRepository;
 
@@ -17,7 +16,6 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    @Transactional
     public String getAllGenres() {
         return genreRepository.findAll().stream().map(this::toString).collect(Collectors.joining(System.lineSeparator()));
     }

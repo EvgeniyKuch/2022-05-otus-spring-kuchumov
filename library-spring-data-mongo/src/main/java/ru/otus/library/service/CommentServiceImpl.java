@@ -20,7 +20,6 @@ public class CommentServiceImpl implements CommentService {
     private final CheckService checkService;
 
     @Override
-    @Transactional
     public String getAllComments() {
         String comments = commentRepository.findAll().stream().map(this::toString).collect(Collectors.joining(System.lineSeparator()));
         return comments.isEmpty() ? "Комментарии отсутствуют" : comments;
@@ -34,15 +33,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @Transactional
     public String getAllCommentsByBookId(String bookId) {
-        var container = checkService.checkAndGetEntities(bookId, null, null, null, null);
-        if (container.getError() != null) {
-            return container.getError();
-        }
-        String comments = container.getBook().getComments().stream()
-                .peek(comment -> comment.setBook(container.getBook()))
-                .map(this::toString)
+        var comments = commentRepository.findAllByBookId(bookId).stream().map(this::toString)
                 .collect(Collectors.joining(System.lineSeparator()));
         return comments.isEmpty() ? String.format("Комментарии к книге c id = %s не найдены", bookId) : comments;
     }
@@ -55,19 +47,10 @@ public class CommentServiceImpl implements CommentService {
             return container.getError();
         }
         var book = container.getBook();
-        var comments = book.getComments();
-        book.setComments(null);
         Comment comment = new Comment();
         comment.setBook(book);
         comment.setContent(content);
-        comment = commentRepository.save(comment);
-        book = comment.getBook();
-        comment.setBook(null);
-        comments.add(comment);
-        book.setComments(comments);
-        bookRepository.save(book);
-        comment.setBook(book);
-        return toString(comment);
+        return toString(commentRepository.save(comment));
     }
 
     @Override
@@ -79,40 +62,22 @@ public class CommentServiceImpl implements CommentService {
         }
         Comment comment = container.getComment();
         comment.setContent(newContent);
-        comment = commentRepository.save(comment);
-        bookRepository.findById(comment.getBook().getId()).ifPresent(book -> {
-            for (Comment note : book.getComments()) {
-                if (note.getId().equals(commentId)) {
-                    note.setContent(newContent);
-                }
-            }
-            bookRepository.save(book);
-        });
-        return toString(comment);
+        return toString(commentRepository.save(comment));
     }
 
     @Override
     @Transactional
     public String deleteCommentById(String id) {
-        commentRepository.findById(id).flatMap(comment -> bookRepository.findById(comment.getBook().getId())).ifPresent(book -> {
-            Comment commentForRemove = null;
-            for (var comment : book.getComments()) {
-                if (comment.getId().equals(id)) {
-                    commentForRemove = comment;
-                }
-            }
-            book.getComments().remove(commentForRemove);
-            bookRepository.save(book);
-        });
         commentRepository.deleteById(id);
         return String.format("Комментарий с id = %s удалён", id);
     }
 
     private String toString(Comment comment) {
-        return String.format("Id: %s. %s. Книга: %s (id = %s). Автор: %s %s",
+        String author = comment.getBook().getAuthor() != null
+                ? String.format("%s %s", comment.getBook().getAuthor().getFirstName(), comment.getBook().getAuthor().getLastName())
+                : "Не найден";
+        return String.format("Id: %s. %s. Книга: %s (id = %s). Автор: %s",
                 comment.getId(), comment.getContent(),
-                comment.getBook().getName(), comment.getBook().getId(),
-                comment.getBook().getAuthor().getFirstName(),
-                comment.getBook().getAuthor().getLastName());
+                comment.getBook().getName(), comment.getBook().getId(), author);
     }
 }

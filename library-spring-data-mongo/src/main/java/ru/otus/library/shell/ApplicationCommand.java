@@ -77,7 +77,7 @@ public class ApplicationCommand {
         return commentService.getAllCommentsByBookId(id);
     }
 
-    @ShellMethod(value = "Добавить комментарий к книге. insertcomm --bookid 2 --content \"Понравилось\". iс -I 2 -C \"Понравилось\"",
+    @ShellMethod(value = "Добавить комментарий к книге. insertcomm --bookid 2 --content \"Понравилось\". ic -I 2 -C \"Понравилось\"",
             key = {"ic", "insertcomm"})
     public String insertComment(@ShellOption({"-I", "--bookid"}) String bookId, @ShellOption({"-C", "--content"}) String content) {
         return commentService.addNewComment(bookId, content);
@@ -93,5 +93,23 @@ public class ApplicationCommand {
             key = {"dc", "deletecomm"})
     public String deleteCommentById(@ShellOption({"--id"}) String id) {
         return commentService.deleteCommentById(id);
+    }
+
+    @ShellMethod(value = "Добавить автора в бибилиотеку. insertauthor --firstname \"Иван\" --lastname \"Тургенев\". ia -F \"Иван\" -L \"Тургенев\"",
+            key = {"ia", "insertauthor"})
+    public String insertAuthor(@ShellOption({"-F", "--firstname"}) String firstname, @ShellOption({"-L", "--lastname"}) String lastname) {
+        return authorService.insertAuthor(firstname, lastname);
+    }
+
+    @ShellMethod(value = "Изменить автора по его id. updateauthor --id 2 --firstname \"Иван\" --lastname \"Тургенев\". ua -I 2 --F \"Иван\" --L \"Тургенев\"",
+            key = {"ua", "updateauthor"})
+    public String updateComment(@ShellOption({"-I", "--id"}) String authorId, @ShellOption({"-F", "--firstname"}) String firstname, @ShellOption({"-L", "--lastname"}) String lastname) {
+        return authorService.updateAuthor(authorId, firstname, lastname);
+    }
+
+    @ShellMethod(value = "Удалить автора по его id. deleteauthor --id 1. da 1",
+            key = {"da", "deleteauthor"})
+    public String deleteAuthorById(@ShellOption({"--id"}) String id) {
+        return authorService.deleteById(id);
     }
 }

@@ -46,28 +46,24 @@ public class BookServiceImpl implements BookService {
         book.setYear(container.getYear());
         book.setAuthor(container.getAuthor());
         book.setGenre(container.getGenre());
-        String result = toString(bookRepository.save(bookRepository.save(book)));
-        book.setComments(null);
-        List<Comment> commentsForUpdate = commentRepository.findAllByBookId(book.getId());
-        commentsForUpdate.forEach(comment -> comment.setBook(book));
-        commentRepository.saveAll(commentsForUpdate);
-        return String.format("Обновлена книга%s%s", System.lineSeparator(), result);
+        return String.format("Обновлена книга%s%s", System.lineSeparator(), toString(bookRepository.save(book)));
     }
 
     @Override
-    @Transactional
     public String getAllBooks() {
         return bookRepository.findAll().stream().map(this::toString).collect(Collectors.joining(System.lineSeparator()));
     }
 
     @Override
-    @Transactional
     public String getBookById(String id) {
-        return bookRepository.findById(id).map(this::toStringWithComments).orElse("Книга не найдена");
+        return bookRepository.findById(id)
+                .map(book -> {
+                    book.setComments(commentRepository.findAllByBookId(id));
+                    return book;
+                }).map(this::toStringWithComments).orElse("Книга не найдена");
     }
 
     @Override
-    @Transactional
     public String deleteById(String id) {
         commentRepository.deleteAllByBookId(id);
         bookRepository.deleteById(id);
@@ -75,9 +71,11 @@ public class BookServiceImpl implements BookService {
     }
 
     private String toString(Book book) {
-        return String.format("Id: %s\tНазвание: %s\tГод: %d\tАвтор: %s %s\tЖанр: %s", book.getId(), book.getName(),
-                book.getYear(), book.getAuthor().getFirstName(),
-                book.getAuthor().getLastName(), book.getGenre().getName());
+        String author = book.getAuthor() != null
+                ? String.format("%s %s", book.getAuthor().getFirstName(), book.getAuthor().getLastName())
+                : "Не найден";
+        return String.format("Id: %s\tНазвание: %s\tГод: %d\tАвтор: %s\tЖанр: %s", book.getId(), book.getName(),
+                book.getYear(), author, book.getGenre().getName());
     }
 
     private String toString(Comment comment, Integer order) {
