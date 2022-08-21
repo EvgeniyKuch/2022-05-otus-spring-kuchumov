@@ -1,0 +1,10 @@
+spring:
+  main:
+    allow-circular-references: true
+  shell:
+    interactive:
+      enabled: false
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.library.changelogs
