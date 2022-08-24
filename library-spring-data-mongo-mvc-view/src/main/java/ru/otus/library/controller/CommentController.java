@@ -21,7 +21,7 @@ public class CommentController {
     @GetMapping("/comment/add-for-book/{id}")
     public String addComment(@PathVariable("id") String bookId, Model model) {
         Comment comment = new Comment();
-        comment.setBook(bookService.getBookWithCommentsById(bookId));
+        comment.setBook(bookService.getBookById(bookId));
         model.addAttribute("comment", comment);
         return "addComment";
     }
