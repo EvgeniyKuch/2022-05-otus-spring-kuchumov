@@ -2,6 +2,7 @@ package ru.otus.library.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.otus.library.controller.exceptions.NotFoundException;
 import ru.otus.library.domain.Book;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.repository.CommentRepository;
@@ -27,17 +28,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getBookWithCommentsById(String id) {
-        return bookRepository.findById(id)
-                .map(book -> {
-                    book.setComments(commentRepository.findAllByBookId(id));
-                    return book;
-                }).orElse(new Book());
-    }
-
-    @Override
     public Book getBookById(String id) {
-        return bookRepository.findById(id).orElse(new Book());
+        return bookRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Книга с id = %s не найдена", id)));
     }
 
     @Override

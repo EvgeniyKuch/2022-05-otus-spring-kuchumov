@@ -8,13 +8,7 @@
 </head>
 <body>
 
-<div class="container-xxl" th:if="!${author.id}">
-    <h3>Автор не найден</h3>
-    <p><a th:href="@{/author}">К списку авторов</a></p>
-    <p><a th:href="@{/}">Домой</a></p>
-</div>
-
-<div class="container-xxl" th:if="${author.id}">
+<div class="container-xxl">
     <form id="edit-form" th:method="post" th:action="@{/author}" th:object="${author}">
         <input type="text" th:field="*{id}" class="form-control" hidden="hidden"/>
         <h3>Автор:</h3>

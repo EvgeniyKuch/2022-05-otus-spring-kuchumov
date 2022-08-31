@@ -50,13 +50,13 @@ public class InitMongoDBDataChangeLog {
 
     @ChangeSet(order = "003", id = "initBooks", author = "kuchumov", runAlways = true)
     public void initBooks(BookRepository repository) {
-        books.add(repository.save(new Book(null, "Капитанская дочка", 1836, authors.get(0), genres.get(6), null)));
-        books.add(repository.save(new Book(null, "Война и мир", 1873, authors.get(1), genres.get(6), null)));
-        books.add(repository.save(new Book(null, "Гарри Поттер и философский камень", 2001, authors.get(3), genres.get(5), null)));
+        books.add(repository.save(new Book(null, "Капитанская дочка", 1836, authors.get(0), genres.get(6))));
+        books.add(repository.save(new Book(null, "Война и мир", 1873, authors.get(1), genres.get(6))));
+        books.add(repository.save(new Book(null, "Гарри Поттер и философский камень", 2001, authors.get(3), genres.get(5))));
     }
 
     @ChangeSet(order = "004", id = "initComments", author = "kuchumov", runAlways = true)
-    public void initComments(MongoDatabase db, CommentRepository commentRepository, BookRepository bookRepository) {
+    public void initComments(CommentRepository commentRepository) {
         initComments(commentRepository, 0, "Не понравилось", "Книга вкусно пахнет");
         initComments(commentRepository, 1, "Много букв", "Понравилось");
         initComments(commentRepository, 2, "Интересно", "Захватывающе", "Закрученный сюжет");

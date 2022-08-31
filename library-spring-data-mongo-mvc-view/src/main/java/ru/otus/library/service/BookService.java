@@ -9,8 +9,6 @@ public interface BookService {
 
     List<Book> getAllBooks();
 
-    Book getBookWithCommentsById(String id);
-
     Book getBookById(String id);
 
     void deleteById(String id);

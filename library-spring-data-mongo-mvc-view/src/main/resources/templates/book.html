@@ -7,10 +7,6 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<div class="container-xxl" th:if="!${book.id}">
-    <h3>Книга не найдена</h3>
-    <p><a th:href="@{/book}">К списку книг</a></p>
-</div>
 <div class="container-xxl" th:if="${book.id}">
     <h3>Книга:</h3>
     <table class="table table-hover">
@@ -33,8 +29,8 @@
     </table>
 
     <h3>Комментарии:</h3>
-    <h3 th:if="${#arrays.isEmpty(book.comments)}">Комментарии к книге отсутствуют</h3>
-    <div class="container-xl" th:if="!${#arrays.isEmpty(book.comments)}">
+    <h3 th:if="${#arrays.isEmpty(comments)}">Комментарии к книге отсутствуют</h3>
+    <div class="container-xl" th:if="!${#arrays.isEmpty(comments)}">
         <table class="table">
             <thead>
             <tr>
@@ -44,7 +40,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="comment, iterStat : ${book.comments}">
+            <tr th:each="comment, iterStat : ${comments}">
                 <td th:text="${iterStat.count}"></td>
                 <td th:text="${comment.content}"></td>
                 <td>

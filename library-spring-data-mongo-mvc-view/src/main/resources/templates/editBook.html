@@ -7,15 +7,10 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<div class="container-xxl" th:if="!${book.id}">
-    <h3>Книга не найдена</h3>
-    <p><a th:href="@{/book}">К списку книг</a></p>
-    <p><a th:href="@{/}">Домой</a></p>
-</div>
 
-<div class="container-xxl" th:if="${book.id}">
+<div class="container-xxl">
     <form id="edit-form" th:method="post" th:action="@{/book}" th:object="${book}">
-        <input type="text" th:field="*{id}" class="form-control" hidden="hidden"/>
+        <input type="text" th:if="${book.id}" th:field="*{id}" class="form-control" hidden="hidden"/>
         <h3>Книга:</h3>
         <table class="table">
             <thead>
@@ -34,7 +29,7 @@
                 </td>
                 <td>
                     <select class="form-control" th:field="*{author}">
-                        <option th:value="null" th:selected="!${book.author}"></option>
+                        <option th:if="${book.id}" th:value="null" th:selected="!${book.author}"></option>
                         <option th:each="a : ${authors}"
                                 th:value="${a.id}"
                                 th:text="${a.firstName} + ' ' + ${a.lastName}"
@@ -46,7 +41,7 @@
                         <option th:each="g : ${genres}"
                                 th:value="${g.id}"
                                 th:text="${g.name}"
-                                th:selected="${g.id==book.genre.id}"></option></option>
+                                th:selected="${book.genre} and ${g.id==book.genre.id}"></option>
                     </select>
                 </td>
                 <td>

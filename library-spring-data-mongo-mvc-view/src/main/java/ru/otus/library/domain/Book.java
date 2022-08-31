@@ -28,7 +28,4 @@ public class Book {
 
     @DBRef
     private Genre genre;
-
-    @Transient
-    private List<Comment> comments;
 }

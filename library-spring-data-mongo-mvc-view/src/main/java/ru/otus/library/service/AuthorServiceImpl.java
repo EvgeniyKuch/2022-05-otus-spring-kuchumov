@@ -2,13 +2,14 @@ package ru.otus.library.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.otus.library.controller.exceptions.NotFoundException;
 import ru.otus.library.domain.Author;
 import ru.otus.library.repository.AuthorRepository;
 
 import java.util.List;
 
-@Service
 @AllArgsConstructor
+@Service
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
@@ -20,7 +21,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author findById(String id) {
-        return authorRepository.findById(id).orElse(new Author());
+        return authorRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Автор с id = %s не найден", id)));
     }
 
     @Override

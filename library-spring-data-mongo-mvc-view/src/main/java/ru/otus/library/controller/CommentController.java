@@ -10,8 +10,8 @@ import ru.otus.library.domain.Comment;
 import ru.otus.library.service.BookService;
 import ru.otus.library.service.CommentService;
 
-@Controller
 @AllArgsConstructor
+@Controller
 public class CommentController {
 
     private final CommentService commentService;
@@ -23,7 +23,7 @@ public class CommentController {
         Comment comment = new Comment();
         comment.setBook(bookService.getBookById(bookId));
         model.addAttribute("comment", comment);
-        return "addComment";
+        return "editComment";
     }
 
     @GetMapping("/comment/edit/{id}")

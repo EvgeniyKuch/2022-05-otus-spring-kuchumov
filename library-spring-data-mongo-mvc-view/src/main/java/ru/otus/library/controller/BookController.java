@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.otus.library.domain.Book;
+import ru.otus.library.domain.Comment;
 import ru.otus.library.service.AuthorService;
 import ru.otus.library.service.BookService;
+import ru.otus.library.service.CommentService;
 import ru.otus.library.service.GenreService;
 
 import java.util.List;
@@ -22,6 +24,8 @@ public class BookController {
     private final AuthorService authorService;
 
     private final GenreService genreService;
+
+    private final CommentService commentService;
 
     @GetMapping("/book")
     public String allBooks(Model model) {
@@ -38,8 +42,10 @@ public class BookController {
 
     @GetMapping("/book/{id}")
     public String getBookById(@PathVariable("id") String id, Model model) {
-        Book book = bookService.getBookWithCommentsById(id);
+        Book book = bookService.getBookById(id);
+        List<Comment> comments = commentService.getCommentByBookId(id);
         model.addAttribute("book", book);
+        model.addAttribute("comments", comments);
         return "book";
     }
 
@@ -56,7 +62,7 @@ public class BookController {
         model.addAttribute("book", new Book());
         model.addAttribute("authors", authorService.getAllAuthors());
         model.addAttribute("genres", genreService.getAllGenres());
-        return "addBook";
+        return "editBook";
     }
 
     @GetMapping("book/delete/{id}")
