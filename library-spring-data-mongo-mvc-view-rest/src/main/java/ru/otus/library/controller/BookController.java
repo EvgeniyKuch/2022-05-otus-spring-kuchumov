@@ -26,15 +26,13 @@ public class BookController {
     private final CommentService commentService;
 
     @GetMapping("/book")
-    public String allBooks(Model model) {
-        List<Book> books = bookService.getAllBooks();
-        model.addAttribute("books", books);
+    public String allBooks() {
         return "listBook";
     }
 
     @GetMapping("/allbook")
     @ResponseBody
-    public List<Book> allBooks() {
+    public List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
 
