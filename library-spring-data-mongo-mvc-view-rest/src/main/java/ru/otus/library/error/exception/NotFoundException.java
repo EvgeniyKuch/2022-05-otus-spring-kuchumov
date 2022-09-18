@@ -1,4 +1,4 @@
-package ru.otus.library.controller.exceptions;
+package ru.otus.library.error.exception;
 
 public class NotFoundException extends RuntimeException {
 

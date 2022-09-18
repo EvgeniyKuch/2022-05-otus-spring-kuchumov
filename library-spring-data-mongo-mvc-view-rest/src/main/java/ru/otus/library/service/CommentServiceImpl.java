@@ -2,8 +2,8 @@ package ru.otus.library.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.library.controller.exceptions.NotFoundException;
 import ru.otus.library.domain.Comment;
+import ru.otus.library.error.exception.NotFoundException;
 import ru.otus.library.repository.CommentRepository;
 
 import java.util.List;

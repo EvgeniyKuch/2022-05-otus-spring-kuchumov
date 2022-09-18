@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.library.controller.exceptions.NotFoundException;
 import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Genre;
+import ru.otus.library.error.exception.NotFoundException;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.repository.CommentRepository;
 
