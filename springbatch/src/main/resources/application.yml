@@ -1,0 +1,21 @@
+spring:
+  main:
+    allow-circular-references: true
+
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  shell:
+    interactive:
+      enabled: true
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27014
+      database: SpringBatch
+
+  liquibase:
+    enabled: false
