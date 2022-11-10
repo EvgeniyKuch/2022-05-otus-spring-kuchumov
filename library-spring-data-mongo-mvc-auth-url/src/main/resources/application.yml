@@ -1,3 +1,16 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      external-file: logs/library.log
+  health:
+    defaults:
+      enabled: true
 mongock:
   change-logs-scan-package:
     - ru.otus.library.changelogs

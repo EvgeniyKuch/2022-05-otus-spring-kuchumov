@@ -6,5 +6,9 @@ Web-интерфейс выполнен на Thymeleaf.<br>
 Добавилен механизм Form-based аутентификации с помощью Spring Security.<br>
 В приложении настроена авторизация на уровне URL с помощью Spring Security.<br>
 
+Подключён Spring Boot Actuator.
+Включены метрики, healthchecks и logfile.
+Реализован свой собственный HealthCheck индикатор (на основе наличия книг)
+
 Хранение данных выполняется в Mongo DB. 
 Структуру и начальные данные создаёт Mongock.<br>

@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.otus</groupId>
     <artifactId>library</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
     <name>library-spring-data-mongo-mvc-auth-url</name>
     <description>Book library</description>
     <properties>
@@ -36,6 +36,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
