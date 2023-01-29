@@ -14,3 +14,11 @@ management:
 mongock:
   change-logs-scan-package:
     - ru.otus.library.changelogs
+logging:
+  file:
+    name: logs/library.log
+  logback:
+    rollingpolicy:
+      max-file-size: 5MB
+  level:
+    root: DEBUG
