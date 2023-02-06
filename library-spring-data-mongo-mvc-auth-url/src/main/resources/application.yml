@@ -22,3 +22,9 @@ logging:
       max-file-size: 5MB
   level:
     root: INFO
+spring:
+  data:
+    mongodb:
+      database: library
+      port: 27017
+      uri: mongodb://localhost
