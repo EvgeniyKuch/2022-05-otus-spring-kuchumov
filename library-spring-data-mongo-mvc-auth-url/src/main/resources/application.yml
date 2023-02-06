@@ -21,4 +21,4 @@ logging:
     rollingpolicy:
       max-file-size: 5MB
   level:
-    root: DEBUG
+    root: INFO

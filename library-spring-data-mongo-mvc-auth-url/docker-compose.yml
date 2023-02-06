@@ -1,0 +1,16 @@
+version: '1'
+services:
+  book-library:
+    image: "book-library"
+    ports:
+      - "8080:8080"
+    networks:
+      - nw
+  mongo:
+    image: "mongo:5.0"
+    ports:
+      - "27017:27017"
+    networks:
+      - nw
+networks:
+  nw:
