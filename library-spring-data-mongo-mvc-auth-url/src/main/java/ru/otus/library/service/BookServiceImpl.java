@@ -1,5 +1,6 @@
 package ru.otus.library.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -18,22 +19,26 @@ public class BookServiceImpl implements BookService {
 
     private final CommentRepository commentRepository;
 
+    @HystrixCommand
     @Override
     @Secured({"ROLE_ADMIN"})
     public Book save(Book book) {
         return bookRepository.save(book);
     }
 
+    @HystrixCommand
     @Override
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
+    @HystrixCommand
     @Override
     public Book getBookById(String id) {
         return bookRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Книга с id = %s не найдена", id)));
     }
 
+    @HystrixCommand
     @Override
     public void deleteById(String id) {
         commentRepository.deleteAllByBookId(id);

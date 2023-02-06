@@ -1,5 +1,6 @@
 package ru.otus.library.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +21,7 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    @HystrixCommand
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         String lowercaseLogin = login.toLowerCase(Locale.ENGLISH);
