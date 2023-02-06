@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.otus</groupId>
     <artifactId>library</artifactId>
-    <version>1.7</version>
+    <version>2.1</version>
     <name>library-spring-data-mongo-mvc-auth-url</name>
     <description>Book library</description>
     <properties>
@@ -92,6 +92,32 @@
                         </exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <from>
+                        <image>bellsoft/liberica-openjdk-alpine:11</image>
+                    </from>
+                    <to>
+                        <image>book-library</image>
+                    </to>
+                    <container>
+                        <ports>
+                            <port>8080</port>
+                        </ports>
+                    </container>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>dockerBuild</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

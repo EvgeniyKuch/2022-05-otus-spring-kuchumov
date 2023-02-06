@@ -1,0 +1,22 @@
+version: '1'
+services:
+  book-library:
+    image: "book-library"
+    depends_on:
+      - mongo
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_DATABASE=library_docker
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo
+      - SPRING_DATA_MONGODB_PORT=27017
+    networks:
+      - nw
+  mongo:
+    image: "mongo:5.0"
+    ports:
+      - "27017:27017"
+    networks:
+      - nw
+networks:
+  nw:
