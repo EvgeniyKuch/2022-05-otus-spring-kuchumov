@@ -28,3 +28,10 @@ spring:
       database: library
       port: 27017
       uri: mongodb://localhost
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 7000
